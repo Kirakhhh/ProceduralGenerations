@@ -53,15 +53,41 @@
     <UnityVersion>2020.3.21f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Voronoi\LandSelector.cs" />
+    <Compile Include="Assets\Scripts\Libraries\Unity-delaunay\Delaunay\ICoord.cs" />
+    <Compile Include="Assets\Scripts\Libraries\Unity-delaunay\geom\Winding.cs" />
+    <Compile Include="Assets\Scripts\Libraries\Unity-delaunay\geom\Polygon.cs" />
     <Compile Include="Assets\Scripts\CellularAutomata\CellAutoMeshGenerator.cs" />
+    <Compile Include="Assets\Scripts\Libraries\Unity-delaunay\Delaunay\Halfedge.cs" />
+    <Compile Include="Assets\Scripts\Voronoi\PerlinNoise.cs" />
+    <Compile Include="Assets\Scripts\Libraries\Unity-delaunay\geom\Circle.cs" />
     <Compile Include="Assets\Scripts\DiamondSquare\DiamondSquareGeneration.cs" />
+    <Compile Include="Assets\Scripts\Libraries\Unity-delaunay\Delaunay\EdgeList.cs" />
     <Compile Include="Assets\Scripts\DungeonGeneration\DungeonMapGeneration.cs" />
     <Compile Include="Assets\Scripts\CellularAutomata\MarchingSquaresGrid.cs" />
+    <Compile Include="Assets\Scripts\Libraries\Unity-delaunay\Delaunay\LR.cs" />
+    <Compile Include="Assets\Scripts\Libraries\Unity-delaunay\Delaunay\Vertex.cs" />
+    <Compile Include="Assets\Scripts\Libraries\Unity-delaunay\Delaunay\Voronoi.cs" />
+    <Compile Include="Assets\Scripts\Libraries\Unity-delaunay\Delaunay\DelaunayHelpers.cs" />
+    <Compile Include="Assets\Scripts\Voronoi\VoronoiMapGenerator.cs" />
     <Compile Include="Assets\Scripts\DungeonGeneration\Triangulation.cs" />
+    <Compile Include="Assets\Scripts\Libraries\Unity-delaunay\Delaunay\Site.cs" />
+    <Compile Include="Assets\Scripts\Voronoi\GraphGeneration.cs" />
     <Compile Include="Assets\Scripts\DungeonGeneration\MinimumSpanningTree.cs" />
+    <Compile Include="Assets\Scripts\Libraries\Unity-delaunay\Delaunay\EdgeReorderer.cs" />
+    <Compile Include="Assets\Scripts\Voronoi\PoissonDiscSampler.cs" />
+    <Compile Include="Assets\Scripts\Libraries\Unity-delaunay\Delaunay\Triangle.cs" />
+    <Compile Include="Assets\Scripts\Libraries\Unity-delaunay\Delaunay\Edge.cs" />
+    <Compile Include="Assets\Scripts\Libraries\Unity-delaunay\Delaunay\HalfedgePriorityQueue.cs" />
+    <Compile Include="Assets\Scripts\Libraries\Unity-delaunay\geom\LineSegment.cs" />
     <Compile Include="Assets\Scripts\PaintTerrain.cs" />
+    <Compile Include="Assets\Scripts\Libraries\Unity-delaunay\utils\IDisposable.cs" />
+    <Compile Include="Assets\Scripts\Voronoi\GraphGenerationElements.cs" />
     <Compile Include="Assets\Scripts\CellularAutomata\CellAutoGeneration.cs" />
+    <Compile Include="Assets\Scripts\Libraries\Unity-delaunay\Delaunay\SiteList.cs" />
     <Compile Include="Assets\Scripts\PerlinNoiseMethod\PerlinNoiseGeneration.cs" />
+    <Compile Include="Assets\Scripts\Voronoi\MeshGenerator.cs" />
+    <Compile Include="Assets\Scripts\Voronoi\TextureGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

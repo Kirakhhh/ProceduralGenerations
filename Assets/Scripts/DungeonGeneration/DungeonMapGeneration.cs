@@ -46,7 +46,7 @@ public class DungeonMapGeneration : MonoBehaviour
         int tempHight;
         generationHolder = GameObject.Find("Dungeon Generator").transform;
 
-        //ГіГ¤Г Г«ГҐГ­ГЁГҐ Г¤Г®Г·ГҐГ°Г­ГЁГµ ГЅГ«ГҐГ¬ГҐГ­ГІГ®Гў ГЇГ°Г®ГёГ«Г®Г© ГЈГҐГ­ГҐГ°Г Г¶ГЁГЁ
+        //удаление дочерних элементов прошлой генерации
         GameObject[] allChildren = new GameObject[transform.childCount];
         int childNum = 0;
         foreach (Transform child in transform)
@@ -84,9 +84,9 @@ public class DungeonMapGeneration : MonoBehaviour
         averageHight /= numOfRooms;
 
 
-        //ГіГ±ГЄГ®Г°ГҐГ­ГЁГҐ Г®ГЎГ°Г ГЎГ®ГІГЄГЁ Г±ГІГ®Г«ГЄГ­Г®ГўГҐГ­ГЁГ©
+        //ускорение обработки столкновений
         Time.timeScale = 10.0f;
-        yield return new WaitForSeconds(60); // ГЇГ ГіГ§Г  Г¤Г«Гї ГЇГ°Г®Г±Г·ГЁГІГ»ГўГ Г­ГЁГї ГЇГ®Г«Г®Г¦ГҐГ­ГЁГї ГЄГ®Г¬Г­Г ГІ
+        yield return new WaitForSeconds(60); // пауза для просчитывания положения комнат
         Time.timeScale = 1.0f; 
 
         for (int i = 0; i < numOfRooms; i++)
@@ -136,7 +136,7 @@ public class DungeonMapGeneration : MonoBehaviour
         minSpanTree = new MinSpanTree(triangulation);
         for (int i = 0; i < minSpanTree.pointsOfMinSpanTreeVectors.Count; i++)
         {
-            //ГўГЁГ§ГіГ Г«ГЁГ§Г Г¶ГЁГї Г°ГҐГЎГҐГ° ГЈГ°Г ГґГ  
+            //визуализация ребер графа 
             //GameObject line = GameObject.Find("Edge " + minSpanTree.pointsOfMinSpanTreeVectors[i].Item1 + "," + minSpanTree.pointsOfMinSpanTreeVectors[i].Item2);
             //line.name = "MainEdge " + minSpanTree.pointsOfMinSpanTreeVectors[i].Item1 + "," + minSpanTree.pointsOfMinSpanTreeVectors[i].Item2;
             //lineRend = line.GetComponent<LineRenderer>();
@@ -155,9 +155,9 @@ public class DungeonMapGeneration : MonoBehaviour
             GameObject line = GameObject.Find("Edge " + triangulation.pointsOfTriangulationVectors[i].Item1 + "," + triangulation.pointsOfTriangulationVectors[i].Item2);
             if (line)
             {
-                if (Random.Range(0, 4) == 2) // ГёГ Г­Г± 25% ГўГҐГ°Г­ГіГІГј Г°ГҐГЎГ°Г®
+                if (Random.Range(0, 4) == 2) // шанс 25% вернуть ребро
                 {
-                    //ГўГЁГ§ГіГ Г«ГЁГ§Г Г¶ГЁГї Г°ГҐГЎГҐГ° ГЈГ°Г ГґГ 
+                    //визуализация ребер графа
                     //line.name = "randMainEdge " + triangulation.pointsOfTriangulationVectors[i].Item1 + "," + triangulation.pointsOfTriangulationVectors[i].Item2;
                     //lineRend = line.GetComponent<LineRenderer>();
                     //lineRend.SetColors(Color.blue, Color.blue);
@@ -175,19 +175,19 @@ public class DungeonMapGeneration : MonoBehaviour
 
         for (int i = 0; i < pointsOfMainCorridors.Count; i++)
         {
-            var xRoom1 = (float)Math.Round(mainRoomsCoords[pointsOfMainCorridors[i].Item1].x); // ГЄГ®Г®Г°Г¤ГЁГ­Г ГІГ» Г¶ГҐГ­ГІГ°Г®Гў ГІГ®Г·ГҐГЄ Г®ГІГ°ГҐГ§ГЄГ 
+            var xRoom1 = (float)Math.Round(mainRoomsCoords[pointsOfMainCorridors[i].Item1].x); // координаты центров точек отрезка
             var yRoom1 = (float)Math.Round(mainRoomsCoords[pointsOfMainCorridors[i].Item1].y);
             var xRoom2 = (float)Math.Round(mainRoomsCoords[pointsOfMainCorridors[i].Item2].x);
             var yRoom2 = (float)Math.Round(mainRoomsCoords[pointsOfMainCorridors[i].Item2].y);
-            var xScaleRoom1 = mainRoomsScales[pointsOfMainCorridors[i].Item1].Item1; // Г°Г Г§Г¬ГҐГ°Г» ГЄГ®Г¬Г­Г ГІ Г¤Г«Гї ГЅГІГЁГµ Г¶ГҐГ­ГІГ°Г®Гў
+            var xScaleRoom1 = mainRoomsScales[pointsOfMainCorridors[i].Item1].Item1; // размеры комнат для этих центров
             var yScaleRoom1 = mainRoomsScales[pointsOfMainCorridors[i].Item1].Item2;
             var xScaleRoom2 = mainRoomsScales[pointsOfMainCorridors[i].Item2].Item1;
             var yScaleRoom2 = mainRoomsScales[pointsOfMainCorridors[i].Item2].Item2;
 
-            var xMiddle = (float)Math.Round((xRoom1 + xRoom2) / 2); //Г±ГҐГ°ГҐГ¤ГЁГ­Г  Г¬ГҐГ¦Г¤Гі Г¶ГҐГ­ГІГ°Г Г¬ГЁ ГІГ®Г·ГҐГЄ
+            var xMiddle = (float)Math.Round((xRoom1 + xRoom2) / 2); //середина между центрами точек
             var yMiddle = (float)Math.Round((yRoom1 + yRoom2) / 2);
 
-            var xLeftBoundRoom1 = xRoom1 - xScaleRoom1 / 2 + 1; // Гў ГЄГ®Г­Г¶ГҐ ГЇГ°ГЁГЎГ ГўГ«ГїГҐГІГ±Гї/Г®ГІГ­ГЁГ¬Г ГҐГІГ±Гї ГІГ®Г«Г№ГЁГ­Г  Г±ГІГҐГ­
+            var xLeftBoundRoom1 = xRoom1 - xScaleRoom1 / 2 + 1; // в конце прибавляется/отнимается толщина стен
             var xRightBoundRoom1 = xRoom1 + xScaleRoom1 / 2 - 1;
             var yBotBoundRoom1 = yRoom1 - yScaleRoom1 / 2 + 1;
             var yTopBoundRoom1 = yRoom1 + yScaleRoom1 / 2 - 1;
@@ -285,16 +285,16 @@ public class DungeonMapGeneration : MonoBehaviour
 
             if (corridor.name != "Corridors")
             {
-                //Г§Г¤ГҐГ±Гј Г­ГҐ Г¬ГҐГ©Г­ ГЄГ®Г¬Г­Г ГІГ», Г  ГўГ±ГҐ Г®Г±ГІГ Г«ГјГ­Г»ГҐ
+                //здесь не мейн комнаты, а все остальные
                 for (int i = 0; i < numOfRooms; i++)
                 {
                     bool checkSideRoom = false;
                     GameObject sideRoom = GameObject.Find("room" + i);
                     if (sideRoom)
                     {
-                        var xRoom = sideRoom.transform.position.x; // ГЄГ®Г®Г°Г¤ГЁГ­Г ГІГ» Г¶ГҐГ­ГІГ°Г®Гў ГІГ®Г·ГҐГЄ Г®ГІГ°ГҐГ§ГЄГ 
+                        var xRoom = sideRoom.transform.position.x; // координаты центров точек отрезка
                         var yRoom = sideRoom.transform.position.y;
-                        var xScaleRoom = sideRoom.transform.localScale.x; // Г°Г Г§Г¬ГҐГ°Г» ГЄГ®Г¬Г­Г ГІ Г¤Г«Гї ГЅГІГЁГµ Г¶ГҐГ­ГІГ°Г®Гў
+                        var xScaleRoom = sideRoom.transform.localScale.x; // размеры комнат для этих центров
                         var yScaleRoom = sideRoom.transform.localScale.y;
 
                         var xLeftBoundRoom = xRoom - xScaleRoom / 2 + 1f;
@@ -356,7 +356,7 @@ public class DungeonMapGeneration : MonoBehaviour
 
         }
         //Time.timeScale = 10.0f;
-        yield return new WaitForSeconds(0.1f); // ГЇГ ГіГ§Г  Г¤Г«Гї ГЇГ°Г®Г±Г·ГЁГІГ»ГўГ Г­ГЁГї ГЇГ®Г«Г®Г¦ГҐГ­ГЁГї ГЄГ®Г¬Г­Г ГІ
+        yield return new WaitForSeconds(0.1f); // пауза для просчитывания положения комнат
         //Time.timeScale = 1.0f;
 
         foreach (Transform room in boardHolder.GetComponentsInChildren<Transform>())
@@ -389,7 +389,7 @@ public class DungeonMapGeneration : MonoBehaviour
 
         }
 
-       foreach (Transform corridor in corridorHolder.GetComponentsInChildren<Transform>())
+        foreach (Transform corridor in corridorHolder.GetComponentsInChildren<Transform>())
             if (corridor.name != "Corridors")
             {
                 Vector3[] CorridorPositions = new Vector3[corridor.GetComponent<LineRenderer>().positionCount];
@@ -605,7 +605,7 @@ public class DungeonMapGeneration : MonoBehaviour
     {
         GameObject tile = tiles[Random.Range(0, tiles.Length)];
         GameObject instanceTile = Instantiate(tile, new Vector3(x, y, 0f), Quaternion.identity) as GameObject;
-        instanceTile.name = "name" + room.name;
+        instanceTile.name = name + room.name;
         instanceTile.transform.SetParent(tilesHolder);
     }
 

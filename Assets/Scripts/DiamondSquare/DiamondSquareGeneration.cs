@@ -16,7 +16,7 @@ public class DiamondSquareGeneration : MonoBehaviour
     public bool randomSeed;
     public int approximation;
     public int offsetX;
-    public int offsetZ;
+    public int offsetY;
     public float waterLevel;
     public bool useOnlyOffsetXY;
 
@@ -101,8 +101,8 @@ public class DiamondSquareGeneration : MonoBehaviour
         for (int i = 0; i < visibleHeightMapResolution; i++)
             for (int j = 0; j < visibleHeightMapResolution; j++)
             {
-                bigMap[i + offsetX, j + offsetZ] = GetHeightInPoint(i + offsetX, j + offsetZ);
-                visibleMap[i, j] = bigMap[i + offsetX, j + offsetZ];
+                bigMap[i + offsetX, j + offsetY] = GetHeightInPoint(i + offsetX, j + offsetY);
+                visibleMap[i, j] = bigMap[i + offsetX, j + offsetY];
             }
 
         PostProcess();

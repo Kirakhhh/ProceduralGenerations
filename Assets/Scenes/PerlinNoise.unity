@@ -233,7 +233,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!23 &939014274
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -292,7 +292,7 @@ Transform:
   m_GameObject: {fileID: 939014273}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 105.1999, y: 837, z: 774}
-  m_LocalScale: {x: 1025, y: 1, z: 1025}
+  m_LocalScale: {x: 513, y: 1, z: 513}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -508,17 +508,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f90a09017a898164bb25d5385dae614c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawMode: 1
+  drawMode: 0
   textureRender: {fileID: 939014274}
   Terrain: {fileID: 1792177311}
   paintTerrain: {fileID: 1792177309}
-  heightMapResolutionPower: 10
-  noiseScale: 176.4
+  heightMapResolutionPower: 9
+  noiseScale: 104.4
   octaves: 6
-  persistence: 0.079
-  lacunarity: 6.01
-  seed: 7
-  offset: {x: 256.6, y: 1.7}
+  persistence: 0.12
+  lacunarity: 5.63
+  seed: 73
+  offset: {x: 253.2, y: 2.5}
   waterLevel: 0.3
 --- !u!114 &1792177309
 MonoBehaviour:
