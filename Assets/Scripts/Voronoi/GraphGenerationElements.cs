@@ -14,13 +14,8 @@ public class MapNode
     private float? _heightDifference;
 
     public Vector3 centerPoint { get; set; }
-    /// <summary>
-    /// An arbitrary half-edge that borders on this map node (face)
-    /// </summary>
     public MapNodeEdge startEdge { get; set; }
-
     public MapNodeType nodeType { get; set; }
-
     public IEnumerable<MapNodeEdge> GetEdges()
     {
         yield return startEdge;
@@ -86,21 +81,10 @@ public class MapNode
 public class MapNodeEdge
 {
     public MapPoint destination { get; set; }
-    /// <summary>
-    /// The next half-edge that shares the same map node (face)
-    /// </summary>
     public MapNodeEdge next { get; set; }
-    /// <summary>
-    /// The previous half-edge that shares the same map node (face)
-    /// </summary>
     public MapNodeEdge previous { get; set; }
-    /// <summary>
-    /// The other half of this half-edge, with a different map node (face)
-    /// </summary>
     public MapNodeEdge neighbor { get; set; }
-    /// <summary>
-    /// The map node that this edge borders on
-    /// </summary>
+
     public MapNode node;
 
     public Vector3 GetStartPosition()

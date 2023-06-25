@@ -35,58 +35,44 @@ public class GraphGenerator
 
     private void CreateFromVoronoi(Voronoi voronoi)
     {
-        // предположительно начала ребер по координатам
         points = new Dictionary<Vector3, MapPoint>();
 
-        // ячейки по координатам их центра, все понятно
         nodesByCenterPosition = new Dictionary<Vector3, MapNode>();
 
-        // по координате находим начинающуюся оттуда группу ребер описывающих Node
         var edgesByStartPosition = new Dictionary<Vector3, List<MapNodeEdge>>();
 
-        // лист ребер
         edges = new List<MapNodeEdge>();
 
-        // границы квадрата в котором происходит движ
         plotBounds = voronoi.plotBounds;
 
-        // крайние угловые сайты (точечки изначальные вокруг которых делали диаграмму)
         var bottomLeftSite = voronoi.NearestSitePoint(voronoi.plotBounds.xMin, voronoi.plotBounds.yMin);
         var bottomRightSite = voronoi.NearestSitePoint(voronoi.plotBounds.xMax, voronoi.plotBounds.yMin);
         var topLeftSite = voronoi.NearestSitePoint(voronoi.plotBounds.xMin, voronoi.plotBounds.yMax);
         var topRightSite = voronoi.NearestSitePoint(voronoi.plotBounds.xMax, voronoi.plotBounds.yMax);
 
-        // угловые координаты
         var topLeft = new Vector3(voronoi.plotBounds.xMin, 0, voronoi.plotBounds.yMax);
         var topRight = new Vector3(voronoi.plotBounds.xMax, 0, voronoi.plotBounds.yMax);
         var bottomLeft = new Vector3(voronoi.plotBounds.xMin, 0, voronoi.plotBounds.yMin);
         var bottomRight = new Vector3(voronoi.plotBounds.xMax, 0, voronoi.plotBounds.yMin);
 
-        //ребра диаграммы вороного относительно коордов сайтов (точек)
         var siteEdges = new Dictionary<Vector2, List<LineSegment>>();
 
         var edgePointsRemoved = 0;
 
-        //для каждого ребрышка в диаграмме вороного
         foreach (var edge in voronoi.Edges())
         {
-            // невидимые за полем
             if (edge.visible)
             {
-
-                //координаты ребра диаграммы вороного (обрезанные)
                 var p1 = edge.clippedEnds[Delaunay.LR.Side.LEFT];
                 var p2 = edge.clippedEnds[Delaunay.LR.Side.RIGHT];
                 var segment = new LineSegment(p1, p2);
 
-                //удаляем слишком маленькие ребра
                 if (Vector2.Distance(p1.Value, p2.Value) < 0.001f)
                 {
                     edgePointsRemoved++;
                     continue;
                 }
 
-                //добавляем ребра в дикшинари если их там нет по этому ключу
                 if (edge.leftSite != null)
                 {
                     if (!siteEdges.ContainsKey(edge.leftSite.Coord))
@@ -103,18 +89,13 @@ public class GraphGenerator
                 }
             }
         }
-        //Debug.Assert(edgePointsRemoved == 0, string.Format("{0} edge points too close and have been removed", edgePointsRemoved));
 
-        // для каждого сайта в диаграмме вороного
         foreach (var site in voronoi.SiteCoords())
         {
-            //берем границы сайта (ребра графа вороного) отсортированные и направленные по часовой стрелке
             var boundries = GetBoundriesForSite(siteEdges, site);
 
-            // центр сайта
             var center = ToVector3(site);
 
-            // создаем ячейку для этого сайта
             var currentNode = new MapNode { centerPoint = center };
             nodesByCenterPosition.Add(center, currentNode);
 
@@ -129,12 +110,10 @@ public class GraphGenerator
                 var end = ToVector3(edge.p1.Value);
                 if (start == end) continue;
 
-                // создаем ребро во всех списках и задаем первое ребро для нода
                 previousEdge = AddEdge(edgesByStartPosition, previousEdge, start, end, currentNode);
                 if (firstEdge == null) firstEdge = previousEdge;
                 if (currentNode.startEdge == null) currentNode.startEdge = previousEdge;
 
-                // Нам нужно выяснить, встречаются ли два ребра, и если нет, то вставить еще несколько ребер, чтобы замкнуть многоугольник (для краев карты)
                 var insertEdges = false;
                 if (i < boundries.Count - 1)
                 {
@@ -196,13 +175,10 @@ public class GraphGenerator
                 }
             }
 
-            // замыкаем нод
             previousEdge.next = firstEdge;
             firstEdge.previous = previousEdge;
-            //AddLeavingEdge(firstEdge);
         }
 
-        // отмечаем ребра разных нодов которые соприкасаются
         ConnectOpposites(edgesByStartPosition);
     }
 
@@ -235,7 +211,6 @@ public class GraphGenerator
     {
         var boundries = siteEdges[site];
 
-        // Sort boundries clockwise
         boundries = FlipClockwise(boundries, site);
         boundries = SortClockwise(boundries, site);
         boundries = SnapBoundries(boundries, 0.001f);
@@ -279,7 +254,6 @@ public class GraphGenerator
                     MapNodeEdge opposite = null;
                     foreach (var item in list)
                     {
-                        // We use .5f to snap the coordinates to each other, otherwise there are holes in the graph
                         if (Math.Abs(item.destination.position.x - startEdgePosition.x) < 0.5f && Math.Abs(item.destination.position.z - startEdgePosition.z) < 0.5f)
                         {
                             opposite = item;
@@ -292,7 +266,6 @@ public class GraphGenerator
                     }
                     else
                     {
-                        // TODO: We need to check that this is at the world boundry, otherwise it's a bug
                         var isAtEdge = endEdgePosition.x == 0 || endEdgePosition.x == plotBounds.width || endEdgePosition.z == 0 || endEdgePosition.z == plotBounds.height ||
                             startEdgePosition.x == 0 || startEdgePosition.x == plotBounds.width || startEdgePosition.z == 0 || startEdgePosition.z == plotBounds.height;
 
@@ -337,10 +310,6 @@ public class GraphGenerator
 
     private MapNodeEdge AddEdge(Dictionary<Vector3, List<MapNodeEdge>> edgesByStartPosition, MapNodeEdge previous, Vector3 start, Vector3 end, MapNode node)
     {
-        //if (start == end)
-        //{
-        //    Debug.Assert(start != end, "Start and end vectors must not be the same");
-        //}
         var currentEdge = new MapNodeEdge { node = node };
 
         if (!points.ContainsKey(start)) points.Add(start, new MapPoint { position = start });
@@ -356,7 +325,6 @@ public class GraphGenerator
         {
             previous.next = currentEdge;
             currentEdge.previous = previous;
-            //AddLeavingEdge(currentEdge);
         }
         return currentEdge;
     }
@@ -364,7 +332,6 @@ public class GraphGenerator
     private Vector3 ToVector3(Vector2 vector)
     {
         return new Vector3(Mathf.Round(vector.x * 1000f) / 1000f, 0, Mathf.Round(vector.y * 1000f) / 1000f);
-        //return new Vector3(vector.x, 0f, vector.y);
     }
 
 }

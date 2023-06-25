@@ -25,7 +25,7 @@ public class PerlinNoise : MonoBehaviour
         float maxNoiseHeight = float.MinValue;
         float minNoiseHeight = float.MaxValue;
 
-        float halfSize = mapSize / 2f; // для приближения в центр шума
+        float halfSize = mapSize / 2f;
 
         for (int y = 0; y < mapSize; y++)
             for (int x = 0; x < mapSize; x++)
@@ -57,7 +57,7 @@ public class PerlinNoise : MonoBehaviour
 
         for (int y = 0; y < mapSize; y++)
             for (int x = 0; x < mapSize; x++)
-                noiseMap[x, y] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, noiseMap[x, y]); //приведение к числам от 0 до 1, т.е. нормализация
+                noiseMap[x, y] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, noiseMap[x, y]);
 
 
         float[,] fallofMap = GenerateFalloffMap(mapSize);

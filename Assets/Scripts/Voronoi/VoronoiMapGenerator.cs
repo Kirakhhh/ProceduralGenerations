@@ -37,30 +37,21 @@ public class VoronoiMapGenerator : MonoBehaviour
     public MeshCollider meshCollider;
 
 
-    //point generation юзаем PoissonDisc не делаем другие
-
     public void GenerateMap()
     {
-        // создаем рандомный набор точек
         var points = GeneratePoints();
 
-        // создаем структуру для диаграммы вороного
         var voronoiMap = new Delaunay.Voronoi(points, null, new Rect(0, 0, mapSize, mapSize), relaxIterations);
 
-        // создаем карту высот на Перлине
         var noiseHeightMap = PerlinNoise.GenerateNoiseMap(mapSize, randomSeed, noiseScale, octaves, persistance, lacunarity, offset, heightMultiplier, heightCurve);
 
-        // граф из ребер и локусов вороного
         var mapGraph = new GraphGenerator(voronoiMap, noiseHeightMap);
 
-        // расставляем биомы по нодам
         LandSelector.SelectLandForGraph(mapGraph);
 
-        // меши
         var meshData = MeshGenerator.GenerateMesh(mapGraph, noiseHeightMap, mapSize);
         UpdateMesh(meshData);
 
-        // текстуры
         var texture = TextureGenerator.GenerateTexture(mapGraph, mapSize, textureSize, colours, drawNodeBoundries, drawDelauneyTriangles, drawNodeCenters);
         UpdateTexture(texture);
     }
